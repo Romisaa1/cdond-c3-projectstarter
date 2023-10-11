@@ -199,7 +199,8 @@ jobs:
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
-            
+            return 1
+      - destroy-environment            
           
 
 #   run-migrations:
