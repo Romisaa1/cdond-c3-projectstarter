@@ -15,12 +15,6 @@
   apt:
     autoremove: yes
 
-- name: "install python"
-  become: yes
-  apt:
-    name: python3
-    state: present 
-
 - name: "install dependencies."
   become: yes
   apt:
