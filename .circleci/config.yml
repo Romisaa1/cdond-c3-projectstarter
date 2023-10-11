@@ -131,28 +131,28 @@ jobs:
   #           npm audit fix --audit-level=critical --force
   #           npm audit --audit-level=critical
 
-  # deploy-infrastructure:
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: install tar and gzip 
-  #         command: |
-  #            yum -y install tar gzip
-  #     - run:
-  #         name: Add back-end ip to ansible inventory
-  #         command: |
-  #           public_ip=$(aws ec2 describe-instances \
-  #             --filters "Name=tag:Name,Values=backend-server" \
-  #             --query "Reservations[0].Instances[0].PublicIpAddress" \
-  #             --output text)
-  #           echo "$public_ip" >> .circleci/ansible/roles/inventory.txt
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: install tar and gzip 
+          command: |
+             yum -y install tar gzip
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            public_ip=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-server" \
+              --query "Reservations[0].Instances[0].PublicIpAddress" \
+              --output text)
+            echo "$public_ip" >> .circleci/ansible/roles/inventory.txt
             
-  #     - persist_to_workspace:
-  #         root: ~/
-  #         paths:
-  #           - project/.circleci/ansible/inventory.txt  
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt  
               
   #     - run:
   #         name: Ensure back-end infrastructure exists
@@ -193,7 +193,6 @@ jobs:
           command: |
             apk add --update ansible
             apk add --update tar gzip
-            apk add --update awscli
             
       - run:
           name: Configure server
@@ -329,13 +328,13 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-     # - deploy-infrastructure
+       - deploy-infrastructure
           # requires: [test-frontend, test-backend]
           # filters:
           #   branches:
           #     only: [test-feature-branch]
        - configure-infrastructure
-      #     requires: [deploy-infrastructure]
+           requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
