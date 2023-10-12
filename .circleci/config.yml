@@ -199,9 +199,7 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
             
-                
-          
-
+  
   run-migrations:
     docker:
       - image: 20-alpine3.17
