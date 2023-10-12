@@ -202,7 +202,7 @@ jobs:
   
   run-migrations:
     docker:
-      - image: 20-alpine3.17
+      - image: current-alpine3.17
     steps:
       - checkout
       - restore_cache:
