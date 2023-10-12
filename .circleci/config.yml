@@ -148,57 +148,57 @@ jobs:
               --query "Reservations[0].Instances[0].PublicIpAddress" \
               --output text)
             echo "$public_ip" >> .circleci/ansible/roles/inventory.txt
-            return 1
+            
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt  
       - destroy-environment        
-  #     - run:
-  #         name: Ensure back-end infrastructure exists
-  #         command: |
-  #           aws cloudformation deploy \
-  #             --template-file .circleci/files/backend.yml \
-  #             --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-  #             --tags project=udaproject \
-  #             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-  #             --tags project=udaproject 
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udaproject \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udaproject 
               
               
-      # - run:
-      #     name: Ensure front-end infrastructure exist
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/frontend.yml \
-      #         --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --tags project=udaproject \
-      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --tags project=udaproject 
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udaproject \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udaproject 
               
-      # - destroy-environment       
+      - destroy-environment       
 
 
 
-  # configure-infrastructure:
-  #   docker:
-  #     - image: python:3.12.0rc3-alpine3.18
-  #   steps:
-  #     - checkout
-  #     - add_ssh_keys:
-  #          fingerprints: ["7a:8b:7c:4d:f7:73:aa:ee:95:ee:b2:f1:dc:ba:d9:ad"] 
-  #     - attach_workspace:
-  #        at: ~/
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           apk add --update ansible
-  #           apk add --update tar gzip
+  configure-infrastructure:
+    docker:
+      - image: python:3.12.0rc3-alpine3.18
+    steps:
+      - checkout
+      - add_ssh_keys:
+           fingerprints: ["7a:8b:7c:4d:f7:73:aa:ee:95:ee:b2:f1:dc:ba:d9:ad"] 
+      - attach_workspace:
+         at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            apk add --update tar gzip
             
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           cd .circleci/ansible
-  #           ansible-playbook -i inventory.txt configure-server.yml
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
             
                 
           
@@ -334,8 +334,8 @@ workflows:
           # filters:
           #   branches:
           #     only: [test-feature-branch]
-      #  - configure-infrastructure:
-      #      requires: [deploy-infrastructure]
+        # - configure-infrastructure:
+        #     requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
