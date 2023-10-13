@@ -240,7 +240,7 @@ jobs:
 
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
             . ~/.nvm/nvm.sh
-            nvm install node
+            nvm install -lts
             nvm --version
             node --version
             npm --version
