@@ -162,8 +162,8 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            export DNS=$(aws ec2 describe-instances  --filters "Name=tag:Name,Values=backend-server"  --query "Reservations[*].Instances[*].PublicDnsName"  --output text)
-            echo "$DNS" >> .circleci/ansible/roles/inventory.txt
+            export pub-ip=$(aws ec2 describe-instances  --filters "Name=tag:Name,Values=backend-server"  --query "Reservations[*].Instances[*].PublicIpAddress"  --output text)
+            echo "$pub-ip" >> .circleci/ansible/inventory.txt
             
       - persist_to_workspace:
           root: ~/
