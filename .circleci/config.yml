@@ -252,7 +252,7 @@ jobs:
             # npm install
 
             curl -sL https://deb.nodesource.com/setup_10.x | bash -
-            yun install -y nodejs
+            yum install -y nodejs
            
 
       - run:
