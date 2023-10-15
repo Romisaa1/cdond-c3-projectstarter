@@ -71,34 +71,34 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
 
-  # test-frontend:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - checkout 
-  #     - restore_cache:
-  #         keys: [frontend-build]
-  #     - run:
-  #         name: test-frontend
-  #         command: |
-  #           cd frontend
-  #           npm install
-  #           npm run test
+  test-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout 
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: test-frontend
+          command: |
+            cd frontend
+            npm install
+            npm run test
 
                 
-  # test-backend:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - checkout 
-  #     - restore_cache:
-  #         keys: [backtend-build]
-  #     - run:
-  #         name: test-backend
-  #         command: |
-  #           cd backend
-  #           npm install
-  #           npm run test
+  test-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout 
+      - restore_cache:
+          keys: [backtend-build]
+      - run:
+          name: test-backend
+          command: |
+            cd backend
+            npm install
+            npm run test
             
   # scan-frontend:
   #   docker:
@@ -136,24 +136,24 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      # - run:
-      #     name: Ensure back-end infrastructure exists
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/backend.yml \
-      #         --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --tags project=udaproject \
-      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --tags project=udaproject 
-      # - run:
-      #     name: Ensure front-end infrastructure exist
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/frontend.yml \
-      #         --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --tags project=udaproject \
-      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --tags project=udaproject 
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udaproject \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udaproject 
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udaproject \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udaproject 
               
       - run:
           name: install tar and gzip 
@@ -235,28 +235,8 @@ jobs:
       - run:
           name: Install nodejs
           command: |
-            # curl -sL https://rpm.nodesource.com/setup_14.x |  bash -
-            # yum install -y nodejs
-
-            # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-            # . ~/.nvm/nvm.sh
-            # nvm install --lts
-            # nvm --version
-            # node --version
-            # npm --version
-
-            #  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-            # export NVM_DIR="$HOME/.nvm"
-            # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            # nvm install node
-            # npm install
-
-            # curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            # yum install -y nodejs
-            yum install https://rpm.nodesource.com/pub_16.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y
             yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1 -y
             yum install gcc-c++ make -y
-# or: yum groupinstall 'Development Tools'
 
       - run:
           name: Get backend url
@@ -275,7 +255,7 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 cp dist s3://udapeople-a1df8c5 --recursive
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
 #       # Here's where you will add some code to rollback on failure      
                     
   deploy-backend:
@@ -371,25 +351,25 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
       # - scan-backend:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      # - deploy-infrastructure
-          # requires: [test-frontend, test-backend]
+      - deploy-infrastructure
+          requires: [test-frontend, test-backend]
           # filters:
           #   branches:
           #     only: [test-feature-branch]
-      #  - configure-infrastructure:
-      #       requires: [deploy-infrastructure]
-      # - run-migrations
-      #    # requires: [configure-infrastructure]
+       - configure-infrastructure:
+            requires: [deploy-infrastructure]
+      - run-migrations
+         requires: [configure-infrastructure]
       - deploy-frontend
-          # requires: [run-migrations]
+          requires: [run-migrations]
       # - deploy-backend:
       #     requires: [run-migrations]
       # - smoke-test:
