@@ -7,7 +7,6 @@
   shell: |
     tar -xzvf artifact.tar.gz
 
-
 - name: "start app"
   shell: |
     npm install
