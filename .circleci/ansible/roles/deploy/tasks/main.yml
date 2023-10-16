@@ -15,8 +15,8 @@
 
 - name: "start app"
   shell: |
-    npm install
-    pm2 stop all
-    pm2 start npm --name "udapeople-backend" -- run start
+    sudo npm install
+    sudo pm2 stop all
+    sudo pm2 start npm --name "udapeople-backend" -- run start
     # pm2 start npm -- start
 
