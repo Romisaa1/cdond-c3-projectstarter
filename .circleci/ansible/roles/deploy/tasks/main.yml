@@ -9,9 +9,10 @@
 
 - name: Extract the zip file
   unarchive:
-    src: artifact.tar.gz
+    src: "{{ circleci_artifacts_dir }}/artifact.tar.gz"
     dest: ~/
     remote_src: yes
+    extra_opts: --gzip
 
 - name: "start app"
   shell: |
