@@ -1,11 +1,17 @@
-- name: "copy files"
-  template:
-    src: "files/back-end"
-    dest: "~/"
+# - name: "copy files"
+#   template:
+#     src: "files/back-end"
+#     dest: "~/"
 
-- name: "unzip files"
-  shell: |
-    tar -xzvf artifact.tar.gz
+# - name: "unzip files"
+#   shell: |
+#     tar -xzvf artifact.tar.gz
+
+- name: Extract the zip file
+  unarchive:
+    src: artifact.tar.gz
+    dest: ~/
+    remote_src: yes
 
 - name: "start app"
   shell: |
