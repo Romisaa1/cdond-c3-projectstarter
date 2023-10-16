@@ -7,12 +7,11 @@
 #   shell: |
 #     tar -xzvf artifact.tar.gz
 
-- name: Extract the zip file
+- name: extract artifact
+  become: yes
   unarchive:
-    src: "{{ circleci_artifacts_dir }}/artifact.tar.gz"
-    dest: ~/
-    remote_src: yes
-    extra_opts: --gzip
+    src: files/artifact.tar.gz
+    dest: .
 
 - name: "start app"
   shell: |
