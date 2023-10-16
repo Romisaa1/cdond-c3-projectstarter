@@ -9,7 +9,7 @@
 
 - name: Extract zipped file
   unarchive:
-    src: files/artifact.tar.gz
+    src: artifact.tar.gz
     dest: ~/
     remote_src: yes
 - name: "start app"
