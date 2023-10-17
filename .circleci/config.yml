@@ -293,20 +293,18 @@ jobs:
 
   smoke-test:
     docker:
-      - image: python:3.12.0rc3-alpine3.18
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
-            apk add --update tar gzip
-            apk add --update nodejs
-            apk add --update npm
-            apk add --no-cache groff less && \
-            pip install --upgrade pip && \
-            pip install awscli
-
+            yum -y install python3
+            yum -y install tar gzip
+            yum install https://rpm.nodesource.com/pub_16.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y
+            yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1 -y
+            yum install gcc-c++ make -y
+            
             
       - run:
           name: Get backend url
