@@ -17,20 +17,20 @@
   become: yes
   shell: |
     export ENVIRONMENT=develpment
-    export TYPEORM_ENTITIES="./modules/domain/**/*.entity.js"
-    export TYPEORM_MIGRATIONS="./migrations/*.js"
-    export TYPEORM_MIGRATIONS_DIR="./migrations"
+    export TYPEORM_ENTITIES=".src/modules/domain/**/*.entity.js"
+    export TYPEORM_MIGRATIONS=".src/migrations/*.js"
+    export TYPEORM_MIGRATIONS_DIR=".src/migrations"
     export TYPEORM_CONNECTION="postgres"
     export TYPEORM_HOST="database-1.csub2uflo81x.us-east-1.rds.amazonaws.com"
     export TYPEORM_USERNAME="postgres"
     export TYPEORM_PASSWORD="12345678"
     export TYPEORM_DATABASE="my1stdb"
     export TYPEORM_PORT=5432
-    npm install
-    pm2 stop default
-    pm2 start main.js
-  args:
-    chdir: /home/ubuntu/dist
+    sudo npm install
+    sudo pm2 stop default
+    sudo pm2 start npm -- start
+  # args:
+  #   chdir: /home/ubuntu/dist
 
 
 # - name: "start app"
